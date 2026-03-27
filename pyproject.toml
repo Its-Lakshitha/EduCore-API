@@ -1,0 +1,21 @@
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+# Enable rules
+select = ["E", "F", "I"]
+# E = pycodestyle errors
+# F = pyflakes
+# I = import sorting
+
+# Ignore rules (optional)
+ignore = ["E501"]  # ignore long line warnings
+
+# Exclude folders
+exclude = [
+    "migrations",
+    "__pycache__",
+    "venv",
+    ".venv",
+    "node_modules"
+]
