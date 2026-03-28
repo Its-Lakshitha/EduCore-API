@@ -23,7 +23,7 @@ lint:
 	ruff check .
 
 # Auto-fix lint issues
-lint-fix:
+fix:
 	ruff check . --fix
 
 # Format code
