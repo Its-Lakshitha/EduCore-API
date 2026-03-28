@@ -65,7 +65,17 @@ class ForgetPasswordView(APIView):
         try:
             user = User.objects.get(email=email)
             uid,token = generate_password_reset_token(user)
-            # Here you would send the token to the user's email
+
+            reset_link = f"http://localhost:3000/reset-password?uid={uid}&token={token}"
+            print(f"Password reset link for {email}: {reset_link}")
+
+            send_mail(
+                subject='Password Reset Request',
+                message=f'Click the link to reset your password: {reset_link}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+            )
+            
             return Response({
                 'uid': uid,
                 'token': token,
