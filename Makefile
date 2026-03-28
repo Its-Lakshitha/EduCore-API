@@ -1,4 +1,3 @@
-# Project variables
 PYTHON=python
 MANAGE=$(PYTHON) manage.py
 
@@ -7,7 +6,7 @@ run:
 	$(MANAGE) runserver
 
 # Make migrations
-makemigrations:
+migrations:
 	$(MANAGE) makemigrations
 
 # Apply migrations
