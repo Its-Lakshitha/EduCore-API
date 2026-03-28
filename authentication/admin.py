@@ -1,4 +1,2 @@
 
-
-
 # Register your models here.
