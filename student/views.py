@@ -1,7 +1,11 @@
 import json
+
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
 from .models import Student
+
 
 def validate_student(data):
     errors = {}
@@ -17,7 +21,7 @@ def validate_student(data):
 
     return errors
 
-@csrf_exempt
+
 @csrf_exempt
 def create_student(request):
     if request.method == "POST":
@@ -31,7 +35,7 @@ def create_student(request):
                     "errors": errors
                 }, status=400)
 
-            # ✅ Save with ORM
+
             student = Student.objects.create(
                 name=data["name"],
                 email=data["email"],
