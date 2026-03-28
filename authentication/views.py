@@ -13,6 +13,8 @@ from .models import User
 from .permissions import IsAdmin
 from .serializers import RegisterSerializer
 from .utils import generate_password_reset_token
+from django.utils.decorators import method_decorator
+from django_ratelimit.decorators import ratelimit
 
 
 class RegisterView(APIView):
@@ -25,6 +27,7 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    @method_decorator(ratelimit(key='ip', rate='5/m', block=True))
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
