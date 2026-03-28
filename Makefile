@@ -7,7 +7,7 @@ run:
 	$(MANAGE) runserver
 
 # Make migrations
-makemigrations:
+migrations:
 	$(MANAGE) makemigrations
 
 # Apply migrations
