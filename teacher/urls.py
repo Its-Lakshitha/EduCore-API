@@ -1,12 +1,13 @@
 from django.urls import path
+
 from .views import (
+    bulk_import_teachers,
     create_teacher,
     delete_teacher,
     get_teacher,
     list_teachers,
-    update_teacher,
     my_teacher_profile,
-    bulk_import_teachers,
+    update_teacher,
 )
 
 urlpatterns = [

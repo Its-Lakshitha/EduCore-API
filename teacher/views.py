@@ -1,13 +1,17 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from .models import Teacher, Department
-from .serializers import TeacherSerializer, CreateTeacherSerializer
 import csv
 from io import TextIOWrapper
+
 from rest_framework import status
-from teacher.enums.TeacherStatus import TeacherStatus
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
-from django.contrib.auth import get_user_model
+from rest_framework.response import Response
+
+from authentication.models import User
+from teacher.enums.TeacherStatus import TeacherStatus
+
+from .models import Teacher
+from .serializers import CreateTeacherSerializer, TeacherSerializer
+
 
 # List all teachers
 @api_view(['GET'])
@@ -35,9 +39,9 @@ def create_teacher(request):
 
     data = serializer.validated_data
 
-    department = None
-    if data.get("department"):
-        department = Department.objects.filter(name=data["department"]).first()
+    # department is None
+    # if data.get("department"):
+    #     Department.objects.filter(name=data["department"]).first()
 
     # teacher = Teacher.objects.create(
     #     user=user,
@@ -56,7 +60,7 @@ def create_teacher(request):
     serializer = TeacherSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=request.user)
-        return Response({"message": "Teacher created successfully", "data": serializer.data}, status=201)
+        return Response({"message": "Teacher created successfully", "data": data}, status=201)
     return Response(serializer.errors, status=400)
 
 # Get a teacher by ID
@@ -108,7 +112,7 @@ def update_teacher_status(request, id):
     new_status = request.data.get('status')
 
     if new_status not in TeacherStatus.values:
-        return Response({"error": f"Invalid status. Valid options are: {', '.join(valid_statuses)}"}, status=400)
+        return Response({"error": f"Invalid status. Valid options are: {', '.join(TeacherStatus.values)}"}, status=400)
 
     teacher.status = status
     teacher.save()
