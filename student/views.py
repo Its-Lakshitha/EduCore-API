@@ -3,13 +3,9 @@ import json
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 
 from .models import Student
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from accounts.permissions import IsAdmin, IsStudent
 
 
 def validate_student(data):
@@ -106,7 +102,7 @@ def get_student(request, id):
             "message": "Student not found"
         }, status=404)
 
-    if rquest.user.role == 'student' and request.user != student.user:
+    if request.user.role == 'student' and request.user != student.user:
         return JsonResponse({
             "status": "error",
             "message": "Unauthorized"
