@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import now
 
 User = settings.AUTH_USER_MODEL
 
@@ -14,7 +15,7 @@ class Student(models.Model):
         year = now().year
 
         last_student = Student.objects.filter(
-            registration_number_startwith=f"STU-{year}"
+            registration_number__startwith=f"STU-{year}"
         ).order_by('-registration_number').first()
 
         if last_student:
