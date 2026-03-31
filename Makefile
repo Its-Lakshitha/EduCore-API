@@ -17,6 +17,10 @@ migrate:
 superuser:
 	$(MANAGE) createsuperuser
 
+#Create a new app
+app:
+	$(MANAGE) startapp $(name)
+
 # Lint check
 lint:
 	ruff check .
