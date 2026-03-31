@@ -1,4 +1,3 @@
-# Project variables
 PYTHON=python
 MANAGE=$(PYTHON) manage.py
 
@@ -17,6 +16,10 @@ migrate:
 # Create superuser
 superuser:
 	$(MANAGE) createsuperuser
+
+#Create a new app
+app:
+	$(MANAGE) startapp $(name)
 
 # Lint check
 lint:
