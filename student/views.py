@@ -1,11 +1,16 @@
 import json
 
-from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
+from .enums.StudentStatus import StudentStatus
 from .models import Student
+from .permissions.StudentPermissions import IsAdminOrReadOnly
+from .serializers import StudentSerializer
+from .services.StudentService import generate_registration_number
 
 
 def validate_student(data):
@@ -21,52 +26,21 @@ def validate_student(data):
 
 
 # Create a new student
+@api_view(['POST'])
+@permission_classes([IsAdminOrReadOnly])
 @csrf_exempt
 def create_student(request):
-    user = request.user
 
-    if request.method == "POST":
-        try:
-            if user.role != 'admin':
-                return JsonResponse({
-                    "status": "error",
-                    "message": "Unauthorized user. Only admins can create students."
-                }, status=403)
+    data = request.data
 
-            data = json.loads(request.body)
+    data['registration_number'] = generate_registration_number()
 
-            errors = validate_student(data)
-            if errors:
-                return JsonResponse({
-                    "status": "error",
-                    "errors": errors
-                }, status=400)
+    serializer = StudentSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-            student = Student.objects.create(
-                name=data["name"],
-                email=data["email"],
-                registration_number=data.get["registration_number"],
-                created_at=data.get["created_at"]
-            )
-
-            return JsonResponse({
-                "status": "success",
-                "message": "Student created",
-                "registration_number": student.registration_number,
-            }, status=201)
-
-        except IntegrityError:
-            return JsonResponse({
-                "status": "error",
-                "message": "Email already exists"
-            }, status=400)
-
-        except json.JSONDecodeError:
-            return JsonResponse({
-                "status": "error",
-                "message": "Invalid JSON"
-            }, status=400)
 
 # List all students
 def list_students(request):
@@ -77,20 +51,8 @@ def list_students(request):
     if query:
         students = students.filter(name__icontains=query)
 
-    data = []
-
-    for student in students:
-        data.append({
-            "id": student.id,
-            "name": student.name,
-            "email": student.email,
-            "registration_number": student.registration_number,
-        })
-
-    return JsonResponse({
-        "status": "success",
-        "data": data
-    })
+    serializer = StudentSerializer(students, many=True)
+    return Response(serializer.data)
 
 # Get a student by ID
 def get_student(request, id):
@@ -107,15 +69,9 @@ def get_student(request, id):
             "status": "error",
             "message": "Unauthorized"
         }, status=403)
-    return JsonResponse({
-        "status": "success",
-        "data": {
-            "id": student.id,
-            "name": student.name,
-            "email": student.email,
-            "registration_number": student.registration_number,
-        }
-    })
+
+    serializer = StudentSerializer(student)
+    return Response(serializer.data)
 
 # Get the profile of the currently authenticated student
 @api_view(['GET'])
@@ -194,4 +150,30 @@ def delete_student(request, id):
         "status": "success",
         "message": "Student deleted"
     })
-# Create your views here.
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAdminOrReadOnly])
+def update_student_status(request, id):
+    try:
+        student = Student.objects.get(id=id)
+    except Student.DoesNotExist:
+        return JsonResponse({
+            "status": "error",
+            "message": "Student not found"
+        }, status=404)
+
+    new_status = request.data.get("status")
+
+
+
+    if new_status not in StudentStatus.values:
+        return Response({"error": "Invalid status"}, status=400)
+
+    student.status = new_status
+    student.save()
+
+    return JsonResponse({
+        "status": "success",
+        "message": "Student status updated"
+    })
