@@ -7,6 +7,7 @@ from .views import (
     list_students,
     my_profile,
     update_student,
+    update_student_status,
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path('students/update/<int:id>', update_student),
     path('students/delete/<int:id>', delete_student),
     path('students/me', my_profile),
+    path('students/update/<int:id>/status', update_student_status),
 ]
