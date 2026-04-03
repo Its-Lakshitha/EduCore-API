@@ -10,7 +10,7 @@ from .enums.StudentStatus import StudentStatus
 from .models import Student
 from .permissions.StudentPermissions import IsAdminOrReadOnly
 from .serializers import StudentSerializer
-from .services.StudentService import generate_registration_number
+from .services import generated_registration_number
 
 
 def validate_student(data):
@@ -33,7 +33,7 @@ def create_student(request):
 
     data = request.data
 
-    data['registration_number'] = generate_registration_number()
+    data['registration_number'] = generated_registration_number()
 
     serializer = StudentSerializer(data=data)
     if serializer.is_valid():
