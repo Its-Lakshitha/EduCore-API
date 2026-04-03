@@ -1,3 +1,3 @@
-from .service import StudentService
+from . import StudentService
 
 __all__ = ['StudentService']

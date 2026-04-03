@@ -1,3 +1,3 @@
-from .enums import StudentStatus
+from . import StudentStatus
 
 __all__ = ['StudentStatus']

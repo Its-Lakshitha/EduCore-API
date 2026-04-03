@@ -1,3 +1,3 @@
-from .permissions import StudentPermissions
+from . import StudentPermissions
 
 __all__ = ['StudentPermissions']

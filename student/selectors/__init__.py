@@ -1,4 +1,4 @@
-from .selectors import StudentSelector
+from . import StudentSelector
 
 __all__ = [
     "StudentSelector",

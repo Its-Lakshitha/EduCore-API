@@ -1,4 +1,3 @@
-from .course import Course
-from .enrollment import Enrollment
+from . import course, enrollment
 
-__all__ = ['Course', 'Enrollment']
+__all__ = ['course', 'enrollment']
