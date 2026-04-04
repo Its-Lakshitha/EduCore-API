@@ -5,13 +5,6 @@ from teacher.enums.TeacherStatus import TeacherStatus
 
 User = settings.AUTH_USER_MODEL
 
-class Department(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    code = models.CharField(max_length=10, unique=True)
-
-    def __str__(self):
-        return self.name
-
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile', null=True, blank=True)
     full_name = models.CharField(max_length=100)
@@ -21,6 +14,7 @@ class Teacher(models.Model):
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True,)
     status = models.CharField(max_length=10, choices=TeacherStatus.choices, default=TeacherStatus.ACTIVE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
