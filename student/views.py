@@ -8,9 +8,10 @@ from rest_framework.response import Response
 
 from .enums.StudentStatus import StudentStatus
 from .models import Student
-from .permissions.StudentPermissions import IsAdminOrReadOnly
+from .permissions.StudentPermissions import IsAdminOrReadOnly, IsActiveStudent
 from .serializers import StudentSerializer
 from .services import generated_registration_number
+from course.selectors.EnrollmentSelector import get_courses_for_student
 
 
 def validate_student(data):
@@ -177,3 +178,22 @@ def update_student_status(request, id):
         "status": "success",
         "message": "Student status updated"
     })
+
+@api_view(['GET'])
+@permission_classes([IsActiveStudent])
+def my_courses(request):
+
+    student = request.user.student_profile
+
+    enrollments = get_courses_for_student(student.id)
+
+    data = [
+        {
+            "course_id": enrollment.course.id,
+            "course_name": enrollment.course.name,
+            "enrollment_date": enrollment.created_at
+        }
+        for enrollment in enrollments
+    ]
+
+    return Response(data)

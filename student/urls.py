@@ -8,6 +8,7 @@ from .views import (
     my_profile,
     update_student,
     update_student_status,
+    my_courses,
 )
 
 urlpatterns = [
@@ -16,6 +17,7 @@ urlpatterns = [
     path('students/<int:id>/', get_student),
     path('students/update/<int:id>', update_student),
     path('students/delete/<int:id>', delete_student),
-    path('students/me', my_profile),
+    path('students/my-profile', my_profile),
     path('students/update/<int:id>/status', update_student_status),
+    path('students/my-courses', my_courses),
 ]

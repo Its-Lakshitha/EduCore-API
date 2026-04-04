@@ -11,6 +11,7 @@ from teacher.enums.TeacherStatus import TeacherStatus
 
 from .models import Teacher
 from .serializers import CreateTeacherSerializer, TeacherSerializer
+from courses.selectors.EnrollmentSelector import get_courses_for_teacher
 
 
 # List all teachers
@@ -199,3 +200,20 @@ def bulk_import_teachers(request):
         "created": created,
         "errors": errors
     })
+
+@api_view(['GET'])
+def my_courses(request):
+
+    teacher = request.user.teacher_profile
+
+    enrollments = get_courses_for_teacher(teacher.id)
+
+    data = [
+        {
+            "course": c.name,
+            "code": c.code
+        }
+        for c in courses
+    ]
+
+    return Response({"courses": courses})
