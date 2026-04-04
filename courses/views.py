@@ -1,7 +1,8 @@
 from selectors.course_selector import get_all_courses
-from selectors.enrollment_selector import get_enrollments_by_student
+from selectors.EnrollmentSelector import get_enrollments_by_student, get_enrollments_by_teacher
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from .permissions import IsAdmin , IsTeacher, IsStudent
 from rest_framework.response import Response
 from services.enrollment_service import enroll_student
 
@@ -61,16 +62,46 @@ def enroll(request):
 
 @api_view(['GET'])
 def student_enrollments(request, student_id):
-    enrollments = get_enrollments_by_student(student_id)
+    user = request.user
+
+    if user.role == 'student':
+        student_id = user.student_profile.id
+    else:
+        student_id = request.GET.get('student_id')
+
+    enrollments = get_enrollments_by_student(student_id=student_id)
     serializer = EnrollmentSerializer(enrollments, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAdmin | IsTeacher])
 def courses_per_teacher(request):
-    data = get_courses_per_teacher()
-    return Response(data)
+    user = request.user
+    if user.role == 'teacher':
+        data = get_courses_per_teacher(teacher_id=user.id)
+    else:
+        data = get_courses_per_teacher()
+
+    return Response([
+        {"course": c.name}
+        for c in courses
+    ])
 
 @api_view(['GET'])
+@permission_classes([IsAdmin | IsTeacher])
 def students_per_course(request):
-    data = get_students_per_course()
-    return Response(data)
+    enrollments = Enrollment.objects.filter(course_id=course_id).select_related('student')
+
+    return Response([
+        {"student": e.student.user.fullName}
+        for e in enrollments
+    ])
+
+@api_view(['GET'])
+def teachers_per_course(request):
+    courses = Course.objects.select_related('teacher')
+
+    return Response([
+        {"course": c.name, "teacher": c.teacher.user.fullName if c.teacher else None}
+        for c in courses
+    ])
