@@ -12,6 +12,7 @@ class Student(models.Model):
     registration_number = models.CharField(max_length=20, unique=True, blank=True)
     status = models.CharField(max_length=20, choices=StudentStatus.choices, default=StudentStatus.ACTIVE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
     def __str__(self):

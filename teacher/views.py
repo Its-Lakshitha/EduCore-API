@@ -1,12 +1,16 @@
 import csv
 from io import TextIOWrapper
 
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from authentication.models import User
+from common.pagination import StandardPagination
+from courses.selectors.DashboardSelector import get_courses_per_teacher
+from courses.serializers import EnrollmentSerializer
 from teacher.enums.TeacherStatus import TeacherStatus
 
 from .models import Teacher
@@ -199,3 +203,21 @@ def bulk_import_teachers(request):
         "created": created,
         "errors": errors
     })
+
+@api_view(['GET'])
+def my_courses(request):
+
+    teacher = request.user.teacher
+
+    queryset = get_courses_per_teacher(teacher.id)
+
+    search = request.query_params.get('search')
+    if search:
+        queryset = queryset.filter(Q(name__icontains=search) | Q(code__icontains=search))
+
+    paginator = StandardPagination()
+    paginated_queryset = paginator.paginate_queryset(queryset, request)
+    serializer = EnrollmentSerializer(paginated_queryset, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
