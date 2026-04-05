@@ -1,17 +1,23 @@
 import json
 
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+from common.pagination import StandardPagination
+from courses.selectors.EnrollmentSelector import (
+    get_student_courses as get_courses_for_student,
+)
+from courses.serializers import EnrollmentSerializer
+
 from .enums.StudentStatus import StudentStatus
 from .models import Student
-from .permissions.StudentPermissions import IsAdminOrReadOnly, IsActiveStudent
+from .permissions.StudentPermissions import IsActiveStudent, IsAdminOrReadOnly
 from .serializers import StudentSerializer
-from .services import generated_registration_number
-from course.selectors.EnrollmentSelector import get_courses_for_student
+from .services.StudentService import generated_registration_number
 
 
 def validate_student(data):
@@ -183,17 +189,15 @@ def update_student_status(request, id):
 @permission_classes([IsActiveStudent])
 def my_courses(request):
 
-    student = request.user.student_profile
+    student = request.user.student
 
-    enrollments = get_courses_for_student(student.id)
+    queryset = get_courses_for_student(student.id).distinct()
 
-    data = [
-        {
-            "course_id": enrollment.course.id,
-            "course_name": enrollment.course.name,
-            "enrollment_date": enrollment.created_at
-        }
-        for enrollment in enrollments
-    ]
+    search = request.query_params.get('search')
+    if search:
+        queryset = queryset.filter(Q(name__icontains=search) | Q(code__icontains=search))
 
-    return Response(data)
+    paginator = StandardPagination()
+    paginated_queryset = paginator.paginate_queryset(queryset, request)
+    serializer = EnrollmentSerializer(paginated_queryset, many=True)
+    return paginator.get_paginated_response(serializer.data)

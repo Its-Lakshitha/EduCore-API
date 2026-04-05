@@ -1,6 +1,13 @@
 from django.urls import path
 
-from .views import create_course, enroll, list_courses, student_enrollments, courses_per_teacher, students_per_course
+from .views import (
+    course_per_teacher,
+    create_course,
+    enroll,
+    list_courses,
+    student_enrollments,
+    students_per_course,
+)
 
 urlpatterns = [
     path('courses/', list_courses.as_view()),

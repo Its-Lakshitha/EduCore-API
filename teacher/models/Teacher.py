@@ -11,7 +11,7 @@ class Teacher(models.Model):
     email = models.EmailField(unique=True)
     employee_id = models.CharField(max_length=20, unique=True, blank=True)
     specialization = models.CharField(max_length=100, blank=True, null=True)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True,)
+    department = models.ForeignKey('teacher.Department', on_delete=models.SET_NULL, null=True, blank=True,)
     status = models.CharField(max_length=10, choices=TeacherStatus.choices, default=TeacherStatus.ACTIVE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

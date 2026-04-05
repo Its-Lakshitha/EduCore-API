@@ -1,4 +1,3 @@
-from . import Teacher
-from . import Department
+from . import Department, Teacher
 
 __all__ = ['Teacher', 'Department']

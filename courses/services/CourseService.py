@@ -1,5 +1,4 @@
 from teacher.choices import TeacherStatus
-from teacher.models import Teacher
 
 
 def validate_teacher_for_course(teacher):

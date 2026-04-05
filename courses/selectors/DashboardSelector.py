@@ -1,7 +1,9 @@
 from django.db.models import Count
+from django.db.models.functions import TruncMonth
+
 from courses.models.course import Course
 from courses.models.enrollment import Enrollment
-from django.db.models.functions import TruncMonth
+
 
 def get_courses_per_teacher():
     return Course.objects.values('teacher__id','teacher__user__email').annotate(total_courses=Count('id')).order_by('-total_courses')
@@ -17,7 +19,7 @@ def filter_enrollments(queryset, start_date=None, end_date=None, department_id=N
 
     return queryset
 
-def get_monthly_enrollments(start_date=None, end_date=None):
+def get_monthly_enrollments(start_date=None, end_date=None, department_id=None):
     enrollments = Enrollment.objects.all()
     enrollments = filter_enrollments(enrollments, start_date, end_date, department_id)
     return enrollments.annotate(month=TruncMonth('enrollment_at')).values('month').annotate(total=Count('id')).order_by('month')

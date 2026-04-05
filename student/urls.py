@@ -5,10 +5,10 @@ from .views import (
     delete_student,
     get_student,
     list_students,
+    my_courses,
     my_profile,
     update_student,
     update_student_status,
-    my_courses,
 )
 
 urlpatterns = [

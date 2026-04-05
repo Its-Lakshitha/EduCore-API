@@ -6,9 +6,9 @@ from .views import (
     delete_teacher,
     get_teacher,
     list_teachers,
+    my_courses,
     my_teacher_profile,
     update_teacher,
-    my_courses,
 )
 
 urlpatterns = [
