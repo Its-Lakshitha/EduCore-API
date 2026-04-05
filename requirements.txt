@@ -1,6 +1,6 @@
 arrow==1.4.0
 asgiref==3.11.1
-Django==6.0.3
+Django==5.2.5
 django-filter==25.2
 django-ratelimit==4.1.0
 djangorestframework==3.17.1
