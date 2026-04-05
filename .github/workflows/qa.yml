@@ -28,11 +28,9 @@ jobs:
 
             - name: Install dependencies
               run: |
-                source .venv/bin/activate
-                pip install -r requirements.txt
-                pip install ruff
+                venv/bin/pip install -r requirements.txt
+                venv/bin/pip install ruff
 
             - name: Run lint
               run: |
-                source .venv/bin/activate
-                ruff check .
+                venv/bin/ruff check .
