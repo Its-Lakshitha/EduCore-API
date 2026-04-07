@@ -1,12 +1,12 @@
 from django.db import models
-from teachers.models import Teacher
+from teacher.models import Teacher
 
-from courses.models import Course
+from courses.models.course import Course
 
 
 class Assignment(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='assignments')
+    course = models.ForeignKey('courses.Course', on_delete=models.CASCADE, related_name='assignments')
+    teacher = models.ForeignKey('teacher.Teacher', on_delete=models.CASCADE, related_name='assignments')
     title = models.CharField(max_length=255)
     description = models.TextField()
     due_date = models.DateTimeField()

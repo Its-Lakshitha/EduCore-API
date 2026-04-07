@@ -1,3 +1,4 @@
+from core.pagination import StandardPagination
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +9,7 @@ from .models.submission import Submission
 from .serializers.AssignmentSerializer import AssignmentSerializer
 from .serializers.SubmissionSerializer import SubmissionSerializer
 from .service.AssignmentService import validate_teacher_active
-from .service.SubmissionService import validate_student_active
+from .service.SubmissionService import handle_submission
 
 
 @api_view(['POST'])
@@ -34,17 +35,28 @@ def list_assignments(request):
     if course_id:
         queryset = queryset.filter(course_id=course_id)
 
-    serilizer = AssignmentSerializer(queryset, many=True)
-    return Response(serilizer.data)
+    search = request.query_params.get('search')
+    if search:
+        queryset = queryset.filter(title__icontains=search)
+
+    paginator = StandardPagination()
+    paginated_queryset = paginator.paginate_queryset(queryset, request)
+
+    serilizer = AssignmentSerializer(paginated_queryset, many=True)
+    return paginator.get_paginated_response(serilizer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def submit_assignment(request, assignment_id):
     student = request.user.student
 
-    validate_student_active(student)
-
     assignment = Assignment.objects.filter(id=assignment_id).first()
+
+    file = request.FILES.get('file')
+    if not file:
+        return Response({"error": "No file uploaded."}, status=status.HTTP_400_BAD_REQUEST)
+
+    submission, action = handle_submission(student, assignment, file)
 
     serializer = SubmissionSerializer(data=request.data)
     if serializer.is_valid():
