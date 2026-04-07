@@ -1,6 +1,8 @@
 from django.db import models
-from . import assignment
+
 from student.models import Student
+
+from . import assignment
 
 
 class Submission(models.Model):

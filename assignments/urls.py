@@ -1,6 +1,11 @@
 from django.urls import path
-from .views import create_assignment, list_assignments, submit_assignment, grade_submission
 
+from .views import (
+    create_assignment,
+    grade_submission,
+    list_assignments,
+    submit_assignment,
+)
 
 urlpatterns = [
     path('assignments/', list_assignments, name='list_assignments'),

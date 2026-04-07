@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from .models.assignment import Assignment
 from .models.submission import Submission
 from .serializers.AssignmentSerializer import AssignmentSerializer
 from .serializers.SubmissionSerializer import SubmissionSerializer
 from .service.AssignmentService import validate_teacher_active
 from .service.SubmissionService import validate_student_active
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['POST'])

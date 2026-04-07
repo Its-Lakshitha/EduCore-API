@@ -1,6 +1,7 @@
 from django.db import models
-from courses.models import Course
 from teachers.models import Teacher
+
+from courses.models import Course
 
 
 class Assignment(models.Model):

@@ -1,4 +1,4 @@
-from . import AssignmentSerializer, SubmissionSerializer, SubmissionSerializer
+from . import AssignmentSerializer, SubmissionSerializer
 
 __all__ = [
     "AssignmentSerializer",
