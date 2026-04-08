@@ -5,14 +5,12 @@ from student.enums.StudentStatus import StudentStatus
 
 from .enums.SubmissionStatus import SubmissionStatus
 from .models.submission import Submission
+from .DeadlineService import determine_submission_status
 
-
-def validate_student_active(student):
-    if student.status != StudentStatus.ACTIVE:
-        raise ValueError("Student is not active")
 
 def handle_submission(student, assignment, file):
-    validate_student_active(student)
+    if student.status != StudentStatus.ACTIVE:
+        raise ValueError("Student is not active")
 
     if not student.enrollments.filter(course=assignment.course).exists():
         raise ValidationError("Student is not enrolled in the course for this assignment")
@@ -24,10 +22,12 @@ def handle_submission(student, assignment, file):
         assignment=assignment
     ).first()
 
+    status = determine_submission_status(assignment, student)
+
     if existing_submission:
         existing_submission.file = file
         existing_submission.version +=1
-        existing_submission.status = SubmissionStatus.LATE if is_late else SubmissionStatus.SUBMITTED
+        existing_submission.status = status
         existing_submission.save()
 
         return existing_submission, 'updated'
