@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import (
     default_token_generator as deafult_token_generator,
@@ -7,7 +8,6 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlsafe_base64_decode
 from django_ratelimit.decorators import ratelimit
 from rest_framework import status
-from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
