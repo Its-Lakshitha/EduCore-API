@@ -19,3 +19,7 @@ exclude = [
     ".venv",
     "node_modules"
 ]
+
+dependencies = [
+    'pywinpty; sys_platform == "win32"',
+]
