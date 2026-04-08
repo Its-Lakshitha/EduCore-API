@@ -12,12 +12,12 @@ from .views import (
 )
 
 urlpatterns = [
-    path('students/create', create_student),
-    path('students/', list_students),
-    path('students/<int:id>/', get_student),
-    path('students/update/<int:id>', update_student),
-    path('students/delete/<int:id>', delete_student),
-    path('students/my-profile', my_profile),
-    path('students/update/<int:id>/status', update_student_status),
-    path('students/my-courses', my_courses),
+    path('students/create', create_student, name='student-create'),
+    path('students/', list_students, name='students-list'),
+    path('students/<int:id>/', get_student, name='student-detail'),
+    path('students/update/<int:id>', update_student, name='student-update'),
+    path('students/delete/<int:id>', delete_student, name='student-delete'),
+    path('students/my-profile', my_profile, name='student-profile'),
+    path('students/update/<int:id>/status', update_student_status, name='student-update-status'),
+    path('students/my-courses', my_courses, name='student-my-courses'),
 ]

@@ -1,9 +1,10 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 
 from authentication.models import User
 from student.models import Student
-from teacher.models import Teacher
+from teacher.models.Teacher import Teacher
 
 
 @receiver(post_save, sender=User)

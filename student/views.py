@@ -15,6 +15,7 @@ from courses.serializers import EnrollmentSerializer
 
 from .enums.StudentStatus import StudentStatus
 from .models import Student
+from rest_framework.permissions import IsAuthenticated
 from .permissions.StudentPermissions import IsActiveStudent, IsAdminOrReadOnly
 from .serializers import StudentSerializer
 from .services.StudentService import generated_registration_number
@@ -50,6 +51,8 @@ def create_student(request):
 
 
 # List all students
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_students(request):
     query = request.GET.get('search')
 
