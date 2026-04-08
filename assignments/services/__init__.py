@@ -1,7 +1,9 @@
-from assignments.services import AssignmentService
-from assignments.services import SubmissionService
-from assignments.services import DeadlineService
-from assignments.services import NotificationService
+from assignments.services import (
+    AssignmentService,
+    DeadlineService,
+    NotificationService,
+    SubmissionService,
+)
 
 __all__ = [
     "AssignmentService",
