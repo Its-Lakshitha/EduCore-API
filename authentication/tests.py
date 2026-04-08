@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-from teacher.models.Teacher import Teacher
+
 from student.models import Student
 
 from .utils import generate_password_reset_token
@@ -221,7 +221,7 @@ class LogoutViewTests(BaseAuthTestCase):
         self.client.post(self.url, {'refresh': tokens['refresh']}, format='json')
 
         # Attempting to use the blacklisted refresh token should fail
-        token_refresh_url = reverse('login')  # We'll just verify the token object
+        reverse('login')  # We'll just verify the token object
         with self.assertRaises(Exception):
             RefreshToken(tokens['refresh']).check_blacklist()
 
@@ -438,7 +438,6 @@ class SignalTests(BaseAuthTestCase):
 
     def test_student_profile_created_on_registration(self):
         """Registering a student user auto-creates a Student profile via signal."""
-        from student.models import Student
 
         url = reverse('register')
         data = {

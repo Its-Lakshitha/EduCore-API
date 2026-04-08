@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from common.pagination import StandardPagination
@@ -15,7 +16,6 @@ from courses.serializers import EnrollmentSerializer
 
 from .enums.StudentStatus import StudentStatus
 from .models import Student
-from rest_framework.permissions import IsAuthenticated
 from .permissions.StudentPermissions import IsActiveStudent, IsAdminOrReadOnly
 from .serializers import StudentSerializer
 from .services.StudentService import generated_registration_number
