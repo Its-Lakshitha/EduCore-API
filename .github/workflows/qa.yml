@@ -23,8 +23,11 @@ jobs:
               with:
                   python-version: '3.11'
 
-            - name: Create a virtual environment
-              run: python -m venv .venv
+            - name: Cache pip dependencies
+              uses: actions/cache@v3
+              with:
+                path: ~/.cache/pip
+                key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
             - name: Install dependencies
               run: |
@@ -34,3 +37,12 @@ jobs:
 
             - name: Run lint
               run: ruff check .
+
+            - name: Django system check
+              run: python manage.py check
+
+            - name: Check migrations
+              run: python manage.py makemigrations --check --dry-run
+
+            - name: Run tests
+              run: python manage.py test
