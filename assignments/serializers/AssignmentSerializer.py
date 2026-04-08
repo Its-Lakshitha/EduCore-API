@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models.assignment import Assignment
+from assignments.models.assignment import Assignment
 
 
 class AssignmentSerializer(serializers.ModelSerializer):

@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from common.pagination import StandardPagination
@@ -50,6 +51,8 @@ def create_student(request):
 
 
 # List all students
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_students(request):
     query = request.GET.get('search')
 

@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from authentication.models import User
 from student.models import Student
-from teacher.models import Teacher
+from teacher.models.Teacher import Teacher
 
 
 @receiver(post_save, sender=User)

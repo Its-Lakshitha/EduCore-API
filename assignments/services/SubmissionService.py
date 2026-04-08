@@ -1,10 +1,10 @@
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
+from assignments.models.submission import Submission
 from student.enums.StudentStatus import StudentStatus
 
 from .DeadlineService import get_effective_deadline
-from .models.submission import Submission
 
 
 def determine_submission_status(assignment, student):
