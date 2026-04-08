@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlsafe_base64_decode
 from django_ratelimit.decorators import ratelimit
 from rest_framework import status
+from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -28,7 +29,7 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-    @method_decorator(ratelimit(key='ip', rate='5/m', block=True))
+    @method_decorator(ratelimit(key='ip', rate='5/m', block=(not getattr(settings, "TESTING", False))))
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')

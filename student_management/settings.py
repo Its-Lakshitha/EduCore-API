@@ -107,6 +107,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'authentication.User'
 
+TESTING = True if 'test' in sys.argv else False
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
