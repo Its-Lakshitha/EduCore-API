@@ -1,8 +1,8 @@
 def notify_students_extension(extension):
-    if extesnion.student:
-        student = extesnion.student
+    if extension.student:
+        student = extension.student
         # Send notification to the student about the extension
-        print(f"Notify {extension.student.id}: Deadline extended")
+        print(f"Notify {student.id}: Deadline extended")
 
     else:
         students = extension.assignment.course.enrollments.all()

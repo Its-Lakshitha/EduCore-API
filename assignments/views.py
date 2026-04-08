@@ -5,10 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models.assignment import Assignment
+from .models.assignment_extension import AssignmentExtension
 from .models.submission import Submission
 from .serializers.AssignmentSerializer import AssignmentSerializer
 from .serializers.SubmissionSerializer import SubmissionSerializer
 from .service.AssignmentService import validate_teacher_active
+from .service.NotificationService import notify_students_extension
 from .service.SubmissionService import handle_submission
 
 
@@ -79,6 +81,30 @@ def grade_submission(request, submission_id):
     submission.save()
 
     return Response({"message": "Submission graded successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def extend_deadline(request, assignment_id):
+    teacher = request.user.teacher
+
+    assignment = Assignment.objects.filter(id=assignment_id).first()
+
+    if assignment.teacher != teacher:
+        return Response({"error": "You are not authorized to extend the deadline for this assignment."}, status=status.HTTP_403_FORBIDDEN)
+
+    student_id = request.data.get('student_id')
+
+    extension = AssignmentExtension.objects.create(
+        assignment=assignment,
+        student_id=student_id,
+        extended_due_date=request.data.get('extended_due_date'),
+        reason=request.data.get('reason'),
+        created_by=teacher
+    )
+
+    notify_students_extension(extension)
+
+    return Response({"message": "Deadline extended successfully."}, status=status.HTTP_200_OK)
 
 
 

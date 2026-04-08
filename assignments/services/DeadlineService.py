@@ -1,4 +1,3 @@
-from django.utils import timezone
 
 def get_effective_deadline(assignment, student):
 

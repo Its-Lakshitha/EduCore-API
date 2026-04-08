@@ -1,7 +1,4 @@
 from django.db import models
-from . import Assignment
-from students.models import Student
-from teacher.models import Teacher
 
 
 class AssignmentExtension(models.Model):

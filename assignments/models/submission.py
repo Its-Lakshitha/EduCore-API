@@ -1,9 +1,7 @@
 from django.db import models
 
-from student.models import Student
-
-from . import assignment
 from assignments.enums.SubmissionStatus import SubmissionStatus
+from student.models import Student
 
 
 class Submission(models.Model):
@@ -12,7 +10,7 @@ class Submission(models.Model):
     submitted_at = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to='assignments/')
     version = models.PositiveIntegerField(default=1)
-    status = models.CharField(max_length=20, choices=SubmissionStatus.choices, default=SubmissionStatus.PENDING)
+    status = models.CharField(max_length=40, choices=SubmissionStatus.choices, default=SubmissionStatus.PENDING)
     grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     feedback = models.TextField(null=True, blank=True)
 

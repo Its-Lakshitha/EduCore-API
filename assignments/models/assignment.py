@@ -1,7 +1,4 @@
 from django.db import models
-from teacher.models import Teacher
-
-from courses.models.course import Course
 
 
 class Assignment(models.Model):

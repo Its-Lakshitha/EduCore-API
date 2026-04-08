@@ -3,10 +3,24 @@ from rest_framework.exceptions import ValidationError
 
 from student.enums.StudentStatus import StudentStatus
 
-from .enums.SubmissionStatus import SubmissionStatus
+from .DeadlineService import get_effective_deadline
 from .models.submission import Submission
-from .DeadlineService import determine_submission_status
 
+
+def determine_submission_status(assignment, student):
+    deadline, source = get_effective_deadline(assignment, student)
+
+    now = timezone.now()
+
+    if now <= deadline:
+        if source == "ORIGINAL":
+            return Submission.Status.SUBMITTED
+        elif source == "GLOBAL_EXTENSION":
+            return Submission.Status.SUBMITTED_ON_EXTENSION
+        elif source == "INDIVIDUAL_EXTENSION":
+            return Submission.Status.SUBMITTED_ON_SPECIAL_EXTENSION
+
+    return Submission.Status.LATE
 
 def handle_submission(student, assignment, file):
     if student.status != StudentStatus.ACTIVE:
@@ -15,7 +29,6 @@ def handle_submission(student, assignment, file):
     if not student.enrollments.filter(course=assignment.course).exists():
         raise ValidationError("Student is not enrolled in the course for this assignment")
 
-    is_late = assignment.due_date < timezone.now()
 
     existing_submission = Submission.objects.filter(
         student=student,
@@ -40,3 +53,4 @@ def handle_submission(student, assignment, file):
     )
 
     return submission, 'created'
+
