@@ -1,4 +1,3 @@
-# Project variables
 PYTHON=python
 MANAGE=$(PYTHON) manage.py
 
@@ -7,7 +6,7 @@ run:
 	$(MANAGE) runserver
 
 # Make migrations
-makemigrations:
+migrations:
 	$(MANAGE) makemigrations
 
 # Apply migrations
@@ -18,12 +17,16 @@ migrate:
 superuser:
 	$(MANAGE) createsuperuser
 
+#Create a new app
+app:
+	$(MANAGE) startapp $(name)
+
 # Lint check
 lint:
 	ruff check .
 
 # Auto-fix lint issues
-lint-fix:
+fix:
 	ruff check . --fix
 
 # Format code
