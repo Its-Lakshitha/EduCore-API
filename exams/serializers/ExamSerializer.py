@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from exams.models import Exam
+
+from exams.models.exam import Exam
+
 
 class ExamSerializer(serializers.ModelSerializer):
     class Meta:

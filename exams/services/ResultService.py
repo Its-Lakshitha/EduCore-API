@@ -1,6 +1,9 @@
 from rest_framework.exceptions import ValidationError
+
 from exams.models.result import Result
+
 from .GradingService import calculate_grade
+
 
 def create_or_update_result(student, exam, score):
     if not student.enrollments.filter(course=exam.course).exists():

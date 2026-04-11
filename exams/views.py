@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+
+from common.pagination import StandardPagination
+from teacher.enums.TeacherStatus import TeacherStatus
 
 from .models.exam import Exam
 from .models.result import Result
 from .serializers.ExamSerializer import ExamSerializer
 from .serializers.ResultSerializer import ResultSerializer
-from .services.ExamService import create_or_update_exam
-from common.pagination import StandardPagination
-from teacher.enums.TeacherStatus import TeacherStatus
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -39,6 +39,18 @@ def list_exams(request):
     serializer = ExamSerializer(paginated_queryset, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def exam_view(request, exam_id):
+    student = request.user.student
+    exam = get_object_or_404(Exam, id=exam_id)
+
+    if not exam.course.enrollments.filter(student=student).exists():
+        return Response({'error': 'You are not enrolled in the course for this exam.'}, status=403)
+
+    serializer = ExamSerializer(exam)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_result(request, exam_id):
@@ -47,9 +59,6 @@ def add_result(request, exam_id):
 
     if exam.teacher != teacher:
         return Response({'error': 'You do not have permission to add results to this exam.'}, status=403)
-
-    student_id = request.data.get('student_id')
-    score = request.data.get('score')
 
     serializer = ResultSerializer(data=request.data)
     if serializer.is_valid():

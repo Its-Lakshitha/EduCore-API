@@ -1,6 +1,9 @@
 from django.db import models
-from .exam import Exam
+
 from student.models import Student
+
+from .exam import Exam
+
 
 class Result(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='results')

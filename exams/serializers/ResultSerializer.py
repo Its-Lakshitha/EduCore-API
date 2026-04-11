@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from exams.models.result import Result
+
 
 class ResultSerializer(serializers.ModelSerializer):
     class Meta:
