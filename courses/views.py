@@ -1,22 +1,22 @@
-from selectors.course_selector import get_all_courses
-from selectors.EnrollmentSelector import (
-    get_enrollments_by_student,
-)
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from services.enrollment_service import enroll_student
 
 from student.models import Student
 from teacher.models import Teacher
 
-from .models import Course, Enrollment
-from .permissions import IsAdmin, IsTeacher
+from .models.course import Course
+from .models.enrollment import Enrollment
+from .permissions.DashboardPermissions import IsAdmin, IsTeacher
+from .selectors.CourseSelector import get_all_courses
 from .selectors.DashboardSelector import (
     get_courses_per_teacher,
 )
+from .selectors.EnrollmentSelector import (
+    get_enrollments_by_student,
+)
 from .serializers import CourseSerializer, EnrollmentSerializer
 from .services.CourseService import validate_teacher_for_course
+from .services.EnrollmentService import enroll_student
 
 
 @api_view(['POST'])
