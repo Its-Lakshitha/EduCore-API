@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsAdminUser(BasePermission):
+class IsAdmin(BasePermission):
     """
     Allows access only to admin users.
     """
@@ -9,7 +9,7 @@ class IsAdminUser(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_staff
 
-class IsTeacherUser(BasePermission):
+class IsTeacher(BasePermission):
     """
     Allows access only to teacher users.
     """
@@ -17,7 +17,7 @@ class IsTeacherUser(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == 'teacher'
 
-class IsStudentUser(BasePermission):
+class IsStudent(BasePermission):
     """
     Allows access only to student users.
     """

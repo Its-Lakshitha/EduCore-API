@@ -1,17 +1,18 @@
-from core.pagination import StandardPagination
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from common.pagination import StandardPagination
 
 from .models.assignment import Assignment
 from .models.assignment_extension import AssignmentExtension
 from .models.submission import Submission
 from .serializers.AssignmentSerializer import AssignmentSerializer
 from .serializers.SubmissionSerializer import SubmissionSerializer
-from .service.AssignmentService import validate_teacher_active
-from .service.NotificationService import notify_students_extension
-from .service.SubmissionService import handle_submission
+from .services.AssignmentService import validate_teacher_active
+from .services.NotificationService import notify_students_extension
+from .services.SubmissionService import handle_submission
 
 
 @api_view(['POST'])
