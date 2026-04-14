@@ -48,7 +48,7 @@ def exam_view(request, exam_id):
     if not exam.course.enrollments.filter(student=student).exists():
         return Response({'error': 'You are not enrolled in the course for this exam.'}, status=403)
 
-    serializer = ExamSerializer(exam)
+    serializer = ExamSerializer(exam, context={'student': student})
     return Response(serializer.data)
 
 @api_view(['POST'])

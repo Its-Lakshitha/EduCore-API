@@ -1,6 +1,7 @@
 from django.db import models
 
 from courses.models.course import Course
+from exams.enums.ExamStatus import ExamStatus
 from teacher.models.Teacher import Teacher
 
 
@@ -13,6 +14,7 @@ class Exam(models.Model):
     end_time = models.DateTimeField()
     duration = models.DurationField()
     total_marks = models.IntegerField()
+    status = models.CharField(max_length=20, choices=ExamStatus.choices, default=ExamStatus.UPCOMING)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
